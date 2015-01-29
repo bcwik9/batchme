@@ -1,7 +1,7 @@
 package unrollTest;
 
 /**
- * StringBatcher is a Batcher that has a limit based on string size
+ * StringBatcher is a Batcher that has a limit based on string size (number of characters)
  */
 public class StringBatcher extends Batcher<String> {
 

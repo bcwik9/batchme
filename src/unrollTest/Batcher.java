@@ -13,6 +13,8 @@ public class Batcher<E> {
 	private int currentSize;
 
 	/**
+	 * Initializer takes a "limit", which determines when the batch buffer is full and needs
+	 * to be flushed. We also track the current size of the batch buffer to make size calculations faster
 	 * @return a new Batcher
 	 */
 	public Batcher(int limit) throws IllegalArgumentException {
@@ -39,15 +41,16 @@ public class Batcher<E> {
 	}
 
 	/**
+	 * Determines the size of an individual object
 	 * @return size of a single object in terms of batch limit
 	 */
 	protected int sizeOfSingleObject(E e) {
-		// Return 1 by default since it takes up a single list entry
+		// Return 1 by default since it takes up a single batch entry
 		return 1;
 	}
 
 	/**
-	 * @return true if the object is smaller than the limit
+	 * @return true if the object size is smaller than the limit
 	 */
 	public boolean willFit(E e) {
 		return sizeOfSingleObject(e) <= getLimit();

@@ -1,29 +1,58 @@
 package unrollTest;
 
+import java.util.ArrayList;
+
 public class Main {
+
+	/**
+	 * Prints out a list unless it's null
+	 * @param list
+	 */
+	private static void printUnlessNull(ArrayList<String> list){
+		if(list != null)
+			System.out.println(list);
+	}
 
 	public static void main(String[] args) {
 		// Create a StringBatcher with a limit of 50 characters total length
 		final Batcher<String> batcher = new StringBatcher(50);
+		final ArrayList<Thread> threads = new ArrayList<Thread>();
 
 		// spawn a bunch of new threads and have them interact with the batcher, adding strings of various length
 		for(int i=0; i < 10000; i++){
-			new Thread(new Runnable() {
-				public void run() { 
+			Thread t = new Thread(new Runnable() {
+				public void run() {
 					// Start adding Strings to the batcher and print out what it's returning
-					System.out.println(batcher.submit("a"));
-					System.out.println(batcher.submit("bb"));
-					System.out.println(batcher.submit("ccc"));
-					System.out.println(batcher.submit("dddd"));
-					System.out.println(batcher.submit("eeeee"));
-					System.out.println(batcher.submit("ffffff"));
-					System.out.println(batcher.submit("ggggggg"));
-					System.out.println(batcher.submit("hhhhhhhh"));
-					System.out.println(batcher.submit("iiiiiiiii"));
-					System.out.println(batcher.submit("jjjjjjjjjj"));
+					printUnlessNull(batcher.submit("a"));
+					printUnlessNull(batcher.submit("bb"));
+					printUnlessNull(batcher.submit("ccc"));
+					printUnlessNull(batcher.submit("dddd"));
+					printUnlessNull(batcher.submit("eeeee"));
+					printUnlessNull(batcher.submit("ffffff"));
+					printUnlessNull(batcher.submit("ggggggg"));
+					printUnlessNull(batcher.submit("hhhhhhhh"));
+					printUnlessNull(batcher.submit("iiiiiiiii"));
+					printUnlessNull(batcher.submit("jjjjjjjjjj"));
 				}
-			}).start();
+			});
+			
+			// Have the thread start and add it to our list of threads
+			t.start();
+			threads.add(t);
 		}
+		
+		// Wait for all threads to complete
+		for(Thread t : threads) {
+			try {
+				t.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		// All done!
+		System.out.println("All threads have completed (" + threads.size() + " total)");
 
 	}
 
