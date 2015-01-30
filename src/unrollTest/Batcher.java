@@ -6,6 +6,7 @@ import java.util.ArrayList;
 /**
  * Batcher is a class that you can submit objects to and it will store them until it reaches a limit,
  * at which point it will flush the batch out
+ * Some of the methods have been synchronized to preserve thread safety
  */
 public class Batcher<E> {
 	private ArrayList<E> batch;
