@@ -9,16 +9,16 @@ import java.util.ArrayList;
  */
 public class Batcher<E> {
 	private ArrayList<E> batch;
-	private final int limit;
+	private int limit;
 	private int currentSize;
 
 	/**
-	 * Initializer takes a "limit", which determines when the batch buffer is full and needs
-	 * to be flushed. We also track the current size of the batch buffer to make size calculations faster
+	 * Initializer takes a "limit", which determines when the batch buffer size.
+	 * We also track the current size of the batch buffer to make size calculations faster
 	 * @return a new Batcher
 	 */
 	public Batcher(int limit) throws IllegalArgumentException {
-		if(limit < 0)
+		if(limit <= 0)
 			throw new IllegalArgumentException("limit specified is invalid");
 
 		this.limit = limit;
@@ -27,54 +27,54 @@ public class Batcher<E> {
 	}
 
 	/**
-	 * @return true if we have reached the limit, false otherwise
+	 * @return the current size of the batch buffer
 	 */
 	private synchronized int getCurrentSize() {
 		return currentSize;
 	}
 
 	/**
-	 * @return true if the batch can hold the object without extending past the limit
+	 * @return true if the batch buffer can hold the object without extending past the batch buffer limit
 	 */
 	private synchronized boolean canAddWithoutFlush(E e) {
 		return (getCurrentSize() + sizeOfSingleObject(e)) <= getLimit();
 	}
 
 	/**
-	 * Determines the size of an individual object
-	 * @return size of a single object in terms of batch limit
+	 * Determines the size of an individual object will take up in the batch buffer
+	 * @return size of a single object
 	 */
 	protected int sizeOfSingleObject(E e) {
-		// Return 1 by default since it takes up a single batch entry
+		// Return 1 by default since it takes up a single batch buffer entry
 		return 1;
 	}
 
 	/**
-	 * @return true if the object size is smaller than the limit
+	 * @return true if the object size is smaller than the batch buffer limit
 	 */
 	public boolean willFit(E e) {
 		return sizeOfSingleObject(e) <= getLimit();
 	}
 
 	/**
-	 * @return the limit
+	 * @return the batch buffer limit
 	 */
 	public int getLimit() {
 		return limit;
 	}
 	
 	/**
-	 * Creates a copy of the batch and flushes the batch out
-	 * @return a copy of the batch
+	 * Creates a copy of the batch buffer and flushes the batch bufferout
+	 * @return a copy of the batch buffer
 	 */
 	public ArrayList<E> flush() {
 		ArrayList<E> ret;
 
 		synchronized(this){
-			// Make a copy of the batch to return
+			// Make a copy of the batch buffer to return
 			ret = new ArrayList<E>(batch);
 
-			// Clear out the batch and reset size variable
+			// Clear out the batch buffer and reset size variable
 			batch.clear();
 			currentSize = 0;
 		}
@@ -84,13 +84,13 @@ public class Batcher<E> {
 	}
 
 	/**
-	 * Add an entry to the batch. If we have reached the limit, flush the batch
+	 * Add an entry to the batch buffer. If we have reached the batch buffer limit, flush the batch buffer
 	 * Synchronized to preserve thread safety since we're expecting multiple threads
 	 * to be submitting objects to the batch
-	 * @return null if the limit hasn't been reached, otherwise return the flushed batch
+	 * @return null if the limit hasn't been reached, otherwise return the flushed batch buffer
 	 */
 	public synchronized ArrayList<E> submit(E e) {
-		// Make sure that the object can fit in an empty batch (ie. size less than the limit)
+		// Make sure that the object can fit in an empty batch buffer (ie. size less than the buffer limit)
 		if(!willFit(e))
 			throw new IllegalArgumentException("object being submitted is too large for current limit!");
 
